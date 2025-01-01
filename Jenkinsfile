@@ -21,16 +21,16 @@ pipeline {
                 sh 'docker build -t medayoubelmaftouhi/simple-maven-app:1.0 .'
             }
         }
-        stage('Push to DockerHub') {
-            steps {
-                withCredentials([string(credentialsId: 'dockerhub-password', variable: 'DOCKER_PASSWORD')]) {
-                    sh '''
-                    echo "$DOCKER_PASSWORD" | docker login -u medayoubelmaftouhi --password-stdin
-                    docker push medayoubelmaftouhi/simple-maven-app:1.0
-                    '''
-                }
-            }
+stage('Push to DockerHub') {
+    steps {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub-password', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+            sh '''
+            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+            docker push medayoubelmaftouhi/simple-maven-app:1.0
+            '''
         }
+    }
+}
         stage('Deploy') {
             steps {
                 sshagent(['remote-server-ssh']) {
