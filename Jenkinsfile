@@ -21,7 +21,7 @@ pipeline {
                 sh 'docker build -t medayoubelmaftouhi/simple-maven-app:1.0 .'
             }
         }
-stage('Push to DockerHub') {
+		stage('Push to DockerHub') {
     steps {
         withCredentials([usernamePassword(credentialsId: 'dockerhub-password', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
             sh '''
@@ -34,8 +34,12 @@ stage('Push to DockerHub') {
         stage('Deploy') {
             steps {
                 sshagent(['remote-server-ssh']) {
-                    sh 'ssh user@remoteserver "docker pull medayoubelmaftouhi/simple-maven-app:1.0 && docker run -d -p 80:80 medayoubelmaftouhi/simple-maven-app:1.0"'
-                }
+            sh '''
+        echo "Simulating deployment..."
+        docker run -d -p 8091:8091 medayoubelmaftouhi/simple-maven-app:1.0
+        echo "Application deployed locally and running on port 8091"
+        '''
+				}
             }
         }
     }
