@@ -31,16 +31,15 @@ pipeline {
         }
     }
 }
-        stage('Deploy') {
-            steps {
-                sshagent(['remote-server-ssh']) {
-            sh '''
-        echo "Simulating deployment..."
+       stage('Deploy') {
+    steps {
+        sh '''
+        echo "Simulating deployment locally..."
+        docker pull medayoubelmaftouhi/simple-maven-app:1.0
         docker run -d -p 8091:8091 medayoubelmaftouhi/simple-maven-app:1.0
-        echo "Application deployed locally and running on port 8091"
+        echo "Application running at http://localhost:8081"
         '''
-				}
-            }
-        }
+	    }
+	}
     }
 }
